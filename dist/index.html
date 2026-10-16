@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#17191d" />
+    <meta
+      name="description"
+      content="スマートフォンで調べながら学べる、コードエディター風の日本語Python辞書"
+    />
+    <title>Python辞書ノート</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <button class="icon-button" id="menuButton" type="button" aria-label="分類を開く" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <a class="brand" href="#top" aria-label="ホームへ戻る">
+          <span class="brand-mark">&gt;_</span>
+          <span><strong>Python</strong><small>辞書ノート</small></span>
+        </a>
+        <button class="icon-button star-button" id="headerFavoriteButton" type="button" aria-label="お気に入りを表示">☆</button>
+      </header>
+
+      <aside class="drawer" id="drawer" aria-hidden="true">
+        <div class="drawer-head">
+          <p>EXPLORER</p>
+          <button class="plain-button" id="closeDrawerButton" type="button" aria-label="分類を閉じる">×</button>
+        </div>
+        <nav aria-label="Python辞書の分類">
+          <button class="tree-item active" data-filter="all" type="button"><span>▾</span> すべての項目</button>
+          <button class="tree-item" data-filter="組み込み型" type="button"><span>◆</span> 組み込み型</button>
+          <button class="tree-item" data-filter="メソッド" type="button"><span>ƒ</span> メソッド</button>
+          <button class="tree-item" data-filter="構文" type="button"><span>λ</span> 構文・制御</button>
+          <button class="tree-item" data-filter="標準ライブラリ" type="button"><span>▣</span> 標準ライブラリ</button>
+          <button class="tree-item" data-filter="外部パッケージ" type="button"><span>⬡</span> 外部パッケージ</button>
+          <button class="tree-item" data-filter="エラー" type="button"><span>!</span> エラーから探す</button>
+          <button class="tree-item module-tree-link" id="drawerModuleButton" type="button"><span>▦</span> モジュール図鑑</button>
+        </nav>
+        <div class="drawer-note">
+          <span class="status-dot"></span>
+          <p>辞書が本体。詳しく読むと、そのまま学習できます。</p>
+        </div>
+      </aside>
+      <div class="scrim" id="scrim" hidden></div>
+
+      <main id="top">
+        <section class="hero" aria-labelledby="heroTitle">
+          <p class="eyebrow"><span></span> MOBILE FIRST PYTHON DICTIONARY</p>
+          <h1 id="heroTitle">調べる。そのまま、<br /><em>理解する。</em></h1>
+          <p class="hero-copy">Pythonの型、メソッド、標準ライブラリ、pandasを日本語で素早く確認できます。</p>
+
+          <form class="search-box" id="searchForm" role="search">
+            <label for="searchInput">Python辞書を検索</label>
+            <div class="search-input-wrap">
+              <span aria-hidden="true">⌕</span>
+              <input
+                id="searchInput"
+                type="search"
+                autocomplete="off"
+                placeholder="append、CSV、集合、エラー…"
+              />
+              <kbd>⌘K</kbd>
+            </div>
+          </form>
+
+          <div class="quick-links" aria-label="検索例">
+            <button type="button" data-query="list.append">list.append()</button>
+            <button type="button" data-query="set">set</button>
+            <button type="button" data-query="continue">continue</button>
+            <button type="button" data-query="pandas">pandas</button>
+            <button type="button" data-query="CSV">CSV</button>
+            <button type="button" id="heroModuleButton">全モジュール</button>
+          </div>
+        </section>
+
+        <section class="module-section" id="modules" aria-labelledby="moduleTitle">
+          <div class="section-heading module-heading">
+            <div>
+              <p class="section-kicker">MODULE EXPLORER</p>
+              <h2 id="moduleTitle">モジュールをタッチしてAPIを見る</h2>
+            </div>
+            <span id="moduleTotalCount" aria-live="polite">読込中</span>
+          </div>
+          <p class="section-description">
+            Python標準ライブラリの公開モジュールとpandasを一覧化。タッチすると、公開されている関数・クラス・定数を表示します。
+          </p>
+
+          <div class="csv-path" aria-labelledby="csvPathTitle">
+            <div class="csv-path-copy">
+              <span class="csv-icon">CSV</span>
+              <div><p>START HERE</p><h3 id="csvPathTitle">CSVを読む・確認する・保存する</h3></div>
+            </div>
+            <div class="csv-path-steps">
+              <button type="button" data-entry-jump="pandas-read-csv"><span>01</span><strong>pd.read_csv()</strong><small>表として読む</small></button>
+              <button type="button" data-entry-jump="csv-dict-reader"><span>02</span><strong>csv.DictReader</strong><small>1行ずつ読む</small></button>
+              <button type="button" data-entry-jump="dataframe-to-csv"><span>03</span><strong>df.to_csv()</strong><small>CSVへ保存</small></button>
+            </div>
+          </div>
+
+          <div class="module-tools">
+            <label class="module-search" for="moduleSearchInput">
+              <span aria-hidden="true">⌕</span>
+              <input id="moduleSearchInput" type="search" autocomplete="off" placeholder="モジュール名・用途で検索" />
+            </label>
+            <div class="module-category-list" id="moduleCategoryList" aria-label="モジュール分類"></div>
+          </div>
+
+          <div class="module-grid" id="moduleGrid"></div>
+          <div class="empty-state module-empty" id="moduleEmptyState" hidden>
+            <span>⌕</span>
+            <h2>モジュールが見つかりません</h2>
+            <p>英語のモジュール名、または「データ」「日時」などの用途で検索してください。</p>
+          </div>
+          <p class="catalog-scope" id="catalogScope"></p>
+        </section>
+
+        <section class="learning-section" aria-labelledby="learningTitle">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">LEARN THROUGH REFERENCE</p>
+              <h2 id="learningTitle">辞書を引くたび、ここまで確認</h2>
+            </div>
+          </div>
+          <div class="learning-grid">
+            <article><span>01</span><h3>型と現在値</h3><p>変数に何型の何が入っていて、実行後にどう変わるかを追います。</p></article>
+            <article><span>02</span><h3>処理の流れ</h3><p>正常・不正・次の周回・関数終了を矢印でたどります。</p></article>
+            <article><span>03</span><h3>変更と戻り値</h3><p>元データを変えるのか、新しい値を返すのかを分けます。</p></article>
+            <article><span>04</span><h3>5種類のテスト</h3><p>正常、空、形式不正、型変換不正、境界値で確認します。</p></article>
+          </div>
+        </section>
+
+        <section class="result-section" aria-labelledby="resultTitle">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">QUICK REFERENCE</p>
+              <h2 id="resultTitle">実行例・エラー例つき学習辞書</h2>
+            </div>
+            <span id="resultCount" aria-live="polite">13項目</span>
+          </div>
+          <div class="result-grid" id="resultGrid"></div>
+          <div class="empty-state" id="emptyState" hidden>
+            <span>⌕</span>
+            <h2>該当する項目がありません</h2>
+            <p>別の単語、分類、やりたいことで検索してみてください。</p>
+            <button type="button" id="resetSearchButton">すべて表示</button>
+          </div>
+        </section>
+        <footer class="site-footer">
+          <p><strong>Python辞書ノート</strong>は個人制作の非公式学習サイトです。</p>
+          <p>Python Software Foundation、pandasプロジェクト、Microsoft、O'Reilly Mediaとは提携・承認関係にありません。</p>
+          <p><a href="./legal.html">ライセンス・出典・プライバシー</a></p>
+        </footer>
+      </main>
+
+      <nav class="bottom-nav" aria-label="メインメニュー">
+        <a href="#top" class="active"><span>⌂</span>ホーム</a>
+        <button type="button" id="bottomSearchButton"><span>⌕</span>検索</button>
+        <button type="button" id="bottomModuleButton"><span>▦</span>モジュール</button>
+        <button type="button" id="bottomFavoriteButton"><span>☆</span>お気に入り</button>
+      </nav>
+    </div>
+
+    <dialog class="entry-dialog" id="entryDialog">
+      <article>
+        <header class="dialog-header">
+          <div>
+            <p id="dialogBreadcrumb">組み込み型 › list</p>
+            <h2 id="dialogTitle">list.append()</h2>
+          </div>
+          <div class="dialog-actions">
+            <button type="button" id="favoriteEntryButton" aria-label="お気に入りに追加">☆</button>
+            <button type="button" id="closeDialogButton" aria-label="詳細を閉じる">×</button>
+          </div>
+        </header>
+        <div class="dialog-scroll">
+          <p class="entry-summary" id="dialogSummary"></p>
+          <div class="signature" id="dialogSignature"></div>
+
+          <div class="mode-tabs" role="tablist" aria-label="コード例の種類">
+            <button class="active" id="successTab" type="button" role="tab" aria-selected="true">✓ 実行例</button>
+            <button id="errorTab" type="button" role="tab" aria-selected="false">× エラー例</button>
+          </div>
+
+          <section class="code-panel" id="successPanel" role="tabpanel">
+            <div class="panel-title"><span>PYTHON</span><button class="copy-button" type="button" data-copy-target="successCode">コピー</button></div>
+            <pre><code id="successCode"></code></pre>
+            <div class="terminal">
+              <p><span>TERMINAL</span> 実行結果</p>
+              <pre id="successOutput"></pre>
+            </div>
+            <div class="explanation">
+              <h3>結果の読み方</h3>
+              <p id="successExplanation"></p>
+            </div>
+          </section>
+
+          <section class="code-panel" id="errorPanel" role="tabpanel" hidden>
+            <div class="panel-title error-title"><span>PROBLEM</span><button class="copy-button" type="button" data-copy-target="errorCode">コピー</button></div>
+            <pre><code id="errorCode"></code></pre>
+            <div class="terminal error-terminal">
+              <p><span>TERMINAL</span> エラー</p>
+              <pre id="errorOutput"></pre>
+            </div>
+            <div class="problem-box">
+              <h3>原因</h3>
+              <p id="errorExplanation"></p>
+            </div>
+            <div class="fix-box">
+              <h3>修正方法</h3>
+              <pre><code id="fixCode"></code></pre>
+            </div>
+          </section>
+
+          <details open>
+            <summary>型と現在値の追跡</summary>
+            <div class="trace-wrap" id="stateTrace"></div>
+          </details>
+          <details>
+            <summary>処理の流れ</summary>
+            <ol class="flow-list" id="flowList"></ol>
+          </details>
+          <details>
+            <summary>引数・戻り値</summary>
+            <div class="detail-body" id="argumentDetail"></div>
+          </details>
+          <details>
+            <summary>元データへの影響</summary>
+            <div class="detail-body" id="mutationDetail"></div>
+          </details>
+          <details>
+            <summary>5種類のテスト</summary>
+            <ul class="test-list" id="testList"></ul>
+          </details>
+          <details>
+            <summary>最小設計・用語</summary>
+            <div class="detail-body" id="learningDetail"></div>
+          </details>
+          <details>
+            <summary>関連項目</summary>
+            <div class="related-list" id="relatedList"></div>
+          </details>
+        </div>
+      </article>
+    </dialog>
+
+    <dialog class="module-dialog" id="moduleDialog">
+      <article>
+        <header class="dialog-header module-dialog-header">
+          <div>
+            <p id="moduleDialogBreadcrumb">標準ライブラリ › データ・ファイル</p>
+            <h2 id="moduleDialogTitle">csv</h2>
+          </div>
+          <button type="button" id="closeModuleDialogButton" aria-label="モジュール詳細を閉じる">×</button>
+        </header>
+        <div class="module-dialog-scroll">
+          <div class="module-intro">
+            <p id="moduleDialogSummary"></p>
+            <div class="module-import-row">
+              <code id="moduleImportCode"></code>
+              <button type="button" id="copyModuleImportButton">コピー</button>
+            </div>
+          </div>
+
+          <div class="api-overview" id="apiOverview"></div>
+          <label class="module-search api-search" for="apiSearchInput">
+            <span aria-hidden="true">⌕</span>
+            <input id="apiSearchInput" type="search" autocomplete="off" placeholder="関数・クラス名で絞り込み" />
+          </label>
+          <div class="api-filter-list" id="apiFilterList" role="tablist" aria-label="APIの種類">
+            <button class="active" type="button" data-api-kind="all">すべて</button>
+            <button type="button" data-api-kind="function">関数</button>
+            <button type="button" data-api-kind="class">クラス</button>
+            <button type="button" data-api-kind="constant">定数</button>
+          </div>
+          <p class="api-result-count" id="apiResultCount" aria-live="polite"></p>
+          <div class="api-list" id="apiList"></div>
+          <div class="empty-state api-empty" id="apiEmptyState" hidden>
+            <span>⌕</span>
+            <h2>APIが見つかりません</h2>
+            <p>別の名前、または「すべて」で確認してください。</p>
+          </div>
+        </div>
+      </article>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./module-catalog.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
