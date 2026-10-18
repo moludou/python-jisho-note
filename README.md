@@ -69,3 +69,9 @@ python generate_module_catalog.py
 - 詳細は [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) を参照してください。
 
 サイト独自部分の利用条件は [`LICENSE.md`](LICENSE.md) を参照してください。
+# 統合先のお知らせ
+
+Python辞典は https://moludou.github.io/linux-command-dictionary/python/ に統合しました。
+共通の入口は https://moludou.github.io/linux-command-dictionary/ です。
+今後の編集・公開は `moludou/linux-command-dictionary` の `python/` で行います。このリポジトリの公開ページは統合先へ自動移動します。
+
